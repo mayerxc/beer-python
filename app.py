@@ -9,10 +9,6 @@ from decouple import config
 
 app = Flask(__name__)
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['APP_SETTINGS']
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgressql://localhost/beer'
-# app.config.from_object(os.environ['APP_SETTINGS'])
-
 def get_env_variable(name):
     try:
         # print(os.environ[name])
@@ -29,7 +25,6 @@ POSTGRES_DB = get_env_variable("POSTGRES_DB")
 
 
 DB_URL = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user=POSTGRES_USER,pw=POSTGRES_PW,url=POSTGRES_URL,db=POSTGRES_DB)
-# config['SQLALCHEMY_DATABASE_URI'] = DB_URL
 app.config['SQLALCHEMY_DATABASE_URI'] = POSTGRES_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # silence the deprecation warning
 
@@ -100,26 +95,16 @@ def getBeer():
         except Exception as e:
             return (str(e))
 
+        soupBeerList.append(beerDict)
 
-        soupBeerList.append({
-            'brewery': 'Tree House',
-            'item': item.find(class_='grid-title').text,
-            'status': item.find(class_='grid-meta-status').text.strip(),
-            'price': convertToFloat(item.find(class_='product-price').text.strip())
-        })
     return jsonify(soupBeerList)
 
 
-@app.route('/environment')
-def environment(): 
-    print(POSTGRES_URL)
-    return jsonify({'url': POSTGRES_URL})
+# @app.route('/environment')
+# def environment(): 
+#     print(POSTGRES_URL)
+#     return jsonify({'url': POSTGRES_URL})
 
-
-
-# @app.route('/treehouse')
-# def treeHouse():
-    # requests.get
 
 # if __name__ == '__main__':
 #     # Threaded option to enable multiple instances for multiple user access support
